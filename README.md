@@ -2,7 +2,7 @@
 
 **A two-sided platform concept for childcare discovery, waitlist transparency, and enrollment in Ontario.**
 
-🔗 **Live prototype:** [m3dya.github.io/DaycareConnect](https://m3dya.github.io/DaycareConnect)
+🔗 **Live prototype:** [https://m3dya.github.io/DaycareConnect](https://m3dya.github.io/DaycareConnect)
 
 > A service design project exploring how to make childcare waitlists honest for parents and manageable for providers — without taking allocation control away from the people who run the centres. Built to the **Ontario Design System** and to **AODA / WCAG 2.1 AA** accessibility standards.
 
