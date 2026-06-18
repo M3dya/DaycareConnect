@@ -4,288 +4,287 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DaycareConnect Ontario</title>
+<!-- Official Ontario Design System compiled theme + fonts (real components) -->
+<link rel="stylesheet" href="https://unpkg.com/@ongov/ontario-design-system-global-styles@latest/dist/styles/css/compiled/ontario-theme.css">
+<link rel="stylesheet" href="https://unpkg.com/@ongov/ontario-design-system-global-styles@latest/dist/misc/ontario-design-system-fonts.css">
 <style>
+  /* Project-specific layout ONLY. All colour/type/spacing comes from the ODS theme above. */
   :root{
-    --green-dark:#1f3d2b;
-    --green:#2f6b45;
-    --green-mid:#3d8a5a;
-    --green-light:#e8f3ec;
-    --green-bar:#2f8a55;
-    --bg:#e9f5ec;
-    --card:#ffffff;
-    --ink:#1c2a20;
-    --ink2:#5a6b5f;
-    --ink3:#8a988e;
-    --line:#e2ebe4;
-    --amber:#c2622a;
-    --amber-bg:#fbeee2;
-    --pill:#2f6b45;
-    --map:#dfeede;
-    --map2:#cfe4cf;
+    --ods-black:#1A1A1A; --ods-grey-5:#F2F2F2; --ods-grey-20:#CCCCCC; --ods-grey-60:#666666; --ods-grey-70:#4D4D4D;
+    --ods-link:#0066CC; --ods-link-hover:#00478F; --ods-focus:#009ADB;
+    --ods-alert:#CD0000; --ods-success:#118847; --ods-success-light:#E5F0E9; --ods-warning:#FFD440; --ods-info:#1080A6;
   }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    background:var(--bg);
-    color:var(--ink);
-    -webkit-font-smoothing:antialiased;
-    line-height:1.45;
-  }
-  .nav{
-    position:sticky;top:0;z-index:50;
-    background:rgba(233,245,236,.85);
-    backdrop-filter:saturate(180%) blur(12px);
-    border-bottom:1px solid var(--line);
-    display:flex;justify-content:flex-end;gap:6px;
-    padding:14px 28px;
-  }
-  .nav button{
-    font:inherit;font-size:14px;font-weight:500;
-    border:none;background:none;color:var(--ink2);
-    padding:6px 14px;border-radius:999px;cursor:pointer;
-    transition:.15s;
-  }
-  .nav button:hover{color:var(--ink);}
-  .nav button.on{background:var(--green-dark);color:#fff;}
-  .wrap{max-width:1080px;margin:0 auto;padding:34px 28px 80px;}
-  .screen{display:none;}
-  .screen.on{display:block;}
-  h1{font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.12;margin-bottom:10px;}
-  .sub{color:var(--ink2);font-size:15px;max-width:540px;margin-bottom:26px;}
+  body{margin:0;}
+  .page{max-width:1140px;margin:0 auto;padding:0 24px;}
+  .screen{display:none;} .screen.on{display:block;}
 
-  /* find care */
-  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;}
-  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:26px;}
-  .chip{
-    font:inherit;font-size:13px;border:1px solid var(--line);
-    background:#fff;color:var(--ink);padding:8px 15px;border-radius:999px;cursor:pointer;transition:.15s;
-  }
-  .chip.on{background:var(--green-dark);color:#fff;border-color:var(--green-dark);}
-  .chip:hover{border-color:var(--green-mid);}
-  .layout{display:grid;grid-template-columns:340px 1fr;gap:26px;align-items:start;}
-  .map{
-    background:var(--map);border-radius:16px;padding:14px;position:sticky;top:78px;
-    border:1px solid var(--line);
-  }
-  .map-canvas{position:relative;height:260px;border-radius:10px;overflow:hidden;
-    background:
-      linear-gradient(var(--map2) 1px,transparent 1px) 0 0/100% 42px,
-      linear-gradient(90deg,var(--map2) 1px,transparent 1px) 0 0/52px 100%,
-      var(--map);
-  }
-  .park{position:absolute;right:14px;bottom:34px;width:120px;height:70px;background:#bcd9b9;border-radius:8px;}
-  .park span{position:absolute;bottom:6px;left:8px;font-size:10px;color:#5d7a5c;}
-  .pin{position:absolute;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;transform:translate(-50%,-50%);}
-  .pin.open{background:var(--amber);}
-  .pin.wait{background:var(--green);}
-  .pin.home{background:#1c2a20;width:11px;height:11px;}
-  .legend{display:flex;gap:14px;margin-top:12px;font-size:11px;color:var(--ink2);flex-wrap:wrap;}
-  .legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle;}
-  .results{display:flex;flex-direction:column;gap:16px;}
-  .result{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;}
-  .result-top{display:flex;justify-content:space-between;align-items:baseline;}
-  .result h3{font-size:16px;font-weight:600;}
-  .dist{font-size:12px;color:var(--ink3);font-variant-numeric:tabular-nums;}
-  .meta{font-size:12px;color:var(--ink3);margin:3px 0 12px;}
-  .matchbox{background:var(--green-light);border-radius:9px;padding:10px 12px;font-size:13px;margin-bottom:11px;}
-  .matchbox b{font-weight:600;}
-  .nomatch{color:var(--ink2);}
-  .avail{font-size:13px;display:flex;align-items:center;gap:7px;margin-bottom:4px;}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex:none;}
-  .dot.g{background:var(--green);}
-  .price{font-size:12px;color:var(--ink2);margin-bottom:11px;}
-  .tags{display:flex;flex-wrap:wrap;gap:7px;}
-  .tag{font-size:11px;background:#f1f6f2;color:var(--ink2);padding:4px 9px;border-radius:6px;}
-  .tag.cwelcc{background:var(--green-light);color:var(--green);font-weight:600;}
+  /* Skip link (AODA) */
+  .ods-skip{position:absolute;left:-999px;top:0;background:var(--ods-black);color:#fff;padding:12px 18px;z-index:200;font-weight:600;font-family:"Open Sans",sans-serif;}
+  .ods-skip:focus{left:8px;top:8px;}
 
-  /* applications */
-  .appcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 26px;margin-bottom:20px;}
-  .appcard h3{font-size:18px;font-weight:600;}
-  .applied{font-size:12px;color:var(--ink3);margin:2px 0 16px;}
-  .stand{background:var(--green-light);border-radius:11px;padding:14px 16px;font-size:14px;margin-bottom:18px;}
-  .stand b{font-weight:600;}
-  .stand .small{font-size:13px;color:var(--ink2);margin-top:3px;display:block;}
-  .barlabel{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;}
-  .bartrack{height:7px;border-radius:999px;background:#e6efe8;overflow:hidden;}
-  .barfill{height:100%;background:var(--green-bar);border-radius:999px;}
-  .barends{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-top:6px;}
-  .warn{font-size:13px;color:var(--amber);margin:16px 0;}
-  .acthead{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin:18px 0 10px;}
-  .act{display:flex;gap:14px;font-size:13px;padding:4px 0;}
-  .act .date{color:var(--amber);font-weight:600;min-width:54px;font-variant-numeric:tabular-nums;}
-  .act.ok .date{color:var(--green);}
-  .confirmrow{background:var(--amber-bg);border-radius:11px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:18px;font-size:14px;}
-  .btn{font:inherit;font-size:13px;font-weight:600;border:none;border-radius:9px;padding:9px 16px;cursor:pointer;}
-  .btn-amber{background:var(--amber);color:#fff;}
-  .confirmed{background:var(--green-light);border-radius:11px;padding:14px 16px;font-size:14px;margin-top:18px;}
-  .confirmed b{color:var(--green);}
-  .docsok{font-size:13px;margin:6px 0 2px;}
+  /* Ontario application header bar */
+  .on-ribbon{background:var(--ods-black);color:#fff;font-family:"Raleway",sans-serif;font-weight:700;font-size:1.125rem;letter-spacing:.01em;padding:10px 0;}
+  .on-ribbon .page{display:flex;align-items:center;gap:10px;}
+  .app-head{border-bottom:2px solid var(--ods-grey-20);}
+  .app-head .page{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-top:16px;padding-bottom:16px;}
+  .app-head .brand{font-family:"Raleway",sans-serif;font-weight:700;font-size:1.375rem;line-height:1.2;}
+  .app-head .brand small{display:block;font-family:"Open Sans",sans-serif;font-weight:400;font-size:.875rem;color:var(--ods-grey-60);}
 
-  /* profile */
-  .pcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px 26px;margin-bottom:22px;}
-  .psectionhead{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:18px 0 4px;}
-  .prow{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px;}
-  .prow:last-child{border-bottom:none;}
-  .prow .k{color:var(--ink2);}
-  .prow .v{font-weight:500;text-align:right;}
-  .badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:7px;}
-  .badge.amber{background:var(--amber-bg);color:var(--amber);}
-  .badge.green{background:var(--green-light);color:var(--green);}
-  .footnote{font-size:12px;color:var(--ink2);padding:14px 0 6px;}
+  /* Tabbed app nav */
+  nav.app-tabs{display:flex;gap:4px;flex-wrap:wrap;}
+  nav.app-tabs button{font-family:"Open Sans",sans-serif;font-size:1rem;font-weight:600;background:none;border:none;color:var(--ods-link);padding:10px 16px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;border-radius:4px;}
+  nav.app-tabs button:hover{color:var(--ods-link-hover);background:#E0F0FF;}
+  nav.app-tabs button[aria-current="page"]{color:var(--ods-black);text-decoration:none;border-bottom:4px solid var(--ods-link);border-radius:0;}
+  nav.app-tabs button:focus-visible{box-shadow:0 0 0 4px var(--ods-focus);outline:4px solid transparent;}
+
+  main{padding:36px 0 90px;}
+
+  /* Choice chips built on real ODS checkbox semantics */
+  .chips{display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0;margin:0;}
+  .chip{position:relative;}
+  .chip input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer;}
+  .chip span{display:inline-block;border:2px solid #767676;border-radius:6px;padding:9px 16px;font-size:1rem;background:#fff;cursor:pointer;}
+  .chip input:checked + span{background:var(--ods-black);color:#fff;border-color:var(--ods-black);}
+  .chip input:focus-visible + span{box-shadow:0 0 0 4px var(--ods-focus);}
+
+  /* Result + application cards (ODS card pattern) */
+  .stack{display:flex;flex-direction:column;gap:18px;}
+  .ods-card{border:1px solid var(--ods-grey-20);border-radius:8px;padding:22px 24px;background:#fff;}
+  .ods-card h2{margin:0;font-size:1.25rem;}
+  .card-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+  .dist{font-size:.875rem;color:var(--ods-grey-60);white-space:nowrap;font-variant-numeric:tabular-nums;}
+  .type{font-size:.875rem;color:var(--ods-grey-60);margin:4px 0 14px;}
+
+  /* ODS callout pattern: left bar + tinted bg */
+  .ontario-callout, .ontario-aside{border-left:4px solid var(--ods-info);background:#E2F0F4;padding:14px 16px;border-radius:0 4px 4px 0;margin:0 0 14px;}
+  .ontario-callout--success{border-left-color:var(--ods-success);background:var(--ods-success-light);}
+  .ontario-callout--warning{border-left-color:var(--ods-warning);background:#FEF6DC;}
+  .ontario-callout--alert{border-left-color:var(--ods-alert);background:#FCEFF0;}
+  .ontario-callout p{margin:0;}
+  .callout-note{display:block;font-size:.875rem;color:var(--ods-grey-70);margin-top:4px;}
+
+  .avail{font-size:1rem;display:flex;align-items:center;gap:9px;margin:0 0 6px;font-weight:600;}
+  .status-dot{width:10px;height:10px;border-radius:50%;flex:none;}
+  .status-dot.open{background:var(--ods-alert);} .status-dot.wait{background:var(--ods-success);}
+  .price{font-size:.9375rem;color:var(--ods-grey-70);margin:0 0 14px;}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:0;}
+  .tag{font-size:.8125rem;background:var(--ods-grey-5);padding:5px 11px;border-radius:4px;}
+  .tag--cwelcc{background:var(--ods-success-light);color:var(--ods-success);font-weight:700;border:1px solid var(--ods-success);}
+
+  /* Standing bar */
+  .barlabel{font-size:.8125rem;font-weight:700;color:var(--ods-grey-70);text-transform:uppercase;letter-spacing:.03em;margin:0 0 8px;}
+  .bartrack{height:10px;border-radius:6px;background:var(--ods-grey-5);border:1px solid var(--ods-grey-20);overflow:hidden;}
+  .barfill{height:100%;background:var(--ods-success);}
+  .barends{display:flex;justify-content:space-between;font-size:.8125rem;color:var(--ods-grey-60);margin-top:7px;}
+
+  .acthead{font-size:.8125rem;font-weight:700;color:var(--ods-grey-70);text-transform:uppercase;letter-spacing:.03em;margin:18px 0 10px;}
+  .activity{list-style:none;padding:0;margin:0;}
+  .activity li{display:flex;gap:16px;font-size:.9375rem;padding:5px 0;}
+  .activity .date{font-weight:700;min-width:62px;color:var(--ods-grey-70);font-variant-numeric:tabular-nums;}
+
+  .confirmrow{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+  .confirmrow p{margin:0;}
+  .ontario-button{margin:0;min-width:auto;}
+  .docsok{font-size:1rem;color:var(--ods-success);font-weight:600;margin:8px 0;}
+
+  /* Summary list (ODS) */
+  dl.ontario-summary{border-top:1px solid var(--ods-grey-20);margin:0 0 30px;}
+  dl.ontario-summary .row{display:flex;justify-content:space-between;gap:16px;padding:14px 2px;border-bottom:1px solid var(--ods-grey-20);}
+  dl.ontario-summary dt{color:var(--ods-grey-70);margin:0;}
+  dl.ontario-summary dd{font-weight:600;text-align:right;margin:0;}
+  .sect{font-family:"Raleway",sans-serif;font-weight:600;font-size:1.125rem;margin:30px 0 6px;}
+
+  /* ODS badges */
+  .ontario-badge{font-size:.8125rem;font-weight:700;padding:4px 11px;border-radius:4px;white-space:nowrap;}
+  .ontario-badge--error{background:#FCEFF0;color:var(--ods-alert);border:1px solid var(--ods-alert);}
+  .ontario-badge--success{background:var(--ods-success-light);color:var(--ods-success);border:1px solid var(--ods-success);}
+  .footnote{font-size:.9375rem;color:var(--ods-grey-70);max-width:60ch;}
+
+  /* Map */
+  .layout{display:grid;grid-template-columns:320px 1fr;gap:28px;align-items:start;}
+  .map{position:sticky;top:20px;}
+  .map-canvas{position:relative;height:240px;border:2px solid var(--ods-grey-20);border-radius:8px;overflow:hidden;background:linear-gradient(var(--ods-grey-5) 1px,transparent 1px) 0 0/100% 40px,linear-gradient(90deg,var(--ods-grey-5) 1px,transparent 1px) 0 0/48px 100%,#fafafa;}
+  .park{position:absolute;right:12px;bottom:30px;width:110px;height:64px;background:var(--ods-success-light);border:1px solid var(--ods-success);border-radius:6px;}
+  .park span{position:absolute;bottom:5px;left:7px;font-size:.6875rem;color:var(--ods-success);}
+  .pin{position:absolute;min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6875rem;font-weight:700;color:#fff;transform:translate(-50%,-50%);border:2px solid #fff;}
+  .pin.open{background:var(--ods-alert);} .pin.wait{background:var(--ods-success);} .pin.home{background:var(--ods-black);width:13px;height:13px;min-width:0;}
+  .legend{list-style:none;margin:14px 0 0;padding:0;font-size:.875rem;color:var(--ods-grey-70);}
+  .legend li{margin-bottom:5px;}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:middle;border:1px solid #fff;}
+
+  .ontario-lead{font-size:1.25rem;color:var(--ods-grey-70);max-width:60ch;}
 
   @media(max-width:760px){
     .layout{grid-template-columns:1fr;}
     .map{position:static;}
-    h1{font-size:27px;}
-    .nav{padding:12px 16px;}
-    .wrap{padding:24px 16px 60px;}
+    .app-head .page{flex-direction:column;align-items:flex-start;}
   }
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;}}
 </style>
 </head>
 <body>
+<a class="ods-skip" href="#main">Skip to main content</a>
 
-<nav class="nav">
-  <button data-go="find" class="on">Find care</button>
-  <button data-go="apps">My applications</button>
-  <button data-go="profile">My profile</button>
-</nav>
+<div class="on-ribbon"><div class="page"><span>Ontario</span></div></div>
 
-<!-- ============ FIND CARE ============ -->
-<section class="screen on" id="find">
-  <div class="wrap">
-    <h1>Every daycare near you.<br>One application.</h1>
-    <p class="sub">Licensed centres, licensed home daycares, and legal home care — all in one place, with real openings and honest waitlist numbers.</p>
+<header class="app-head">
+  <div class="page">
+    <div class="brand">DaycareConnect Ontario<small>Find and apply for licensed childcare</small></div>
+    <nav class="app-tabs" aria-label="Main">
+      <button data-go="find" aria-current="page">Find care</button>
+      <button data-go="apps">My applications</button>
+      <button data-go="profile">My profile</button>
+    </nav>
+  </div>
+</header>
 
-    <div class="eyebrow">What matters most to you?</div>
-    <div class="chips">
-      <button class="chip on">Infant (under 18 mo)</button>
-      <button class="chip on">CWELCC fees ($22/day)</button>
-      <button class="chip">Daily outdoor time</button>
-      <button class="chip">Home daycare is fine</button>
-      <button class="chip">French / bilingual</button>
+<main id="main" tabindex="-1">
+<div class="page">
+
+<!-- FIND CARE -->
+<section class="screen on" id="find" aria-labelledby="find-h">
+  <h1 id="find-h" class="ontario-h1">Every daycare near you. One application.</h1>
+  <p class="ontario-lead">Licensed centres, licensed home daycares, and legal home care — all in one place, with real openings and honest waitlist numbers.</p>
+
+  <fieldset class="ontario-fieldset" style="border:none;padding:0;margin:24px 0 30px;">
+    <legend class="ontario-fieldset__legend" style="font-family:'Raleway',sans-serif;font-weight:600;font-size:1rem;margin-bottom:12px;">What matters most to you?</legend>
+    <ul class="chips">
+      <li class="chip"><input type="checkbox" id="f1" checked><span>Infant (under 18 mo)</span></li>
+      <li class="chip"><input type="checkbox" id="f2" checked><span>CWELCC fees ($22/day)</span></li>
+      <li class="chip"><input type="checkbox" id="f3"><span>Daily outdoor time</span></li>
+      <li class="chip"><input type="checkbox" id="f4"><span>Home daycare is fine</span></li>
+      <li class="chip"><input type="checkbox" id="f5"><span>French / bilingual</span></li>
+    </ul>
+  </fieldset>
+
+  <div class="layout">
+    <div class="map">
+      <div class="map-canvas" role="img" aria-label="Map of nearby daycares. Amber pins are open now, green pins are waitlist, black dot is your home.">
+        <div class="park"><span>Riverside Park</span></div>
+        <div class="pin wait" style="left:18%;top:36%">6</div>
+        <div class="pin wait" style="left:33%;top:30%">1</div>
+        <div class="pin wait" style="left:60%;top:24%">4</div>
+        <div class="pin open" style="left:50%;top:48%">2</div>
+        <div class="pin wait" style="left:25%;top:60%">3</div>
+        <div class="pin open" style="left:44%;top:74%">5</div>
+        <div class="pin home" style="left:42%;top:50%"></div>
+      </div>
+      <ul class="legend">
+        <li><i style="background:var(--ods-alert)"></i>Spot open now</li>
+        <li><i style="background:var(--ods-success)"></i>Waitlist</li>
+        <li><i style="background:var(--ods-black)"></i>Your home</li>
+      </ul>
     </div>
 
-    <div class="layout">
-      <div class="map">
-        <div class="map-canvas">
-          <div class="park"><span>Riverside Park</span></div>
-          <div class="pin wait" style="left:18%;top:36%">6</div>
-          <div class="pin wait" style="left:33%;top:30%">1</div>
-          <div class="pin wait" style="left:60%;top:24%">4</div>
-          <div class="pin open" style="left:50%;top:48%">2</div>
-          <div class="pin wait" style="left:25%;top:60%">3</div>
-          <div class="pin open" style="left:44%;top:74%">5</div>
-          <div class="pin home" style="left:42%;top:50%"></div>
-        </div>
-        <div class="legend">
-          <span><i style="background:var(--amber)"></i>Spot open now</span>
-          <span><i style="background:var(--green)"></i>Waitlist</span>
-          <span><i style="background:#1c2a20"></i>Your home</span>
-        </div>
-      </div>
+    <div class="stack">
+      <article class="ods-card">
+        <div class="card-top"><h2>1. Maple Grove Children's Centre</h2><span class="dist">450 m</span></div>
+        <p class="type">Licensed centre · ages 6 mo – 4 yr</p>
+        <div class="ontario-callout ontario-callout--success"><p><strong>Matches what matters to you:</strong> Infant (under 18 mo) · CWELCC fees ($22/day)</p></div>
+        <p class="avail"><span class="status-dot open"></span>3 infant spots opening Sept 2026</p>
+        <p class="price">$22/day (CWELCC) · 18 families in range for this age group</p>
+        <ul class="tags"><li class="tag tag--cwelcc">CWELCC ✓</li><li class="tag">2 hrs daily outdoor</li><li class="tag">10 infants (licensed max 10)</li></ul>
+      </article>
 
-      <div class="results">
-        <div class="result">
-          <div class="result-top"><h3>1. Maple Grove Children's Centre</h3><span class="dist">450 m</span></div>
-          <div class="meta">Licensed centre · ages 6 mo – 4 yr</div>
-          <div class="matchbox"><b>Matches what matters to you:</b> Infant (under 18 mo) · CWELCC fees ($22/day)</div>
-          <div class="avail"><span class="dot"></span>3 infant spots opening Sept 2026</div>
-          <div class="price">$22/day (CWELCC) · 18 families in range for this age group</div>
-          <div class="tags"><span class="tag cwelcc">CWELCC ✓</span><span class="tag">2 hrs daily outdoor</span><span class="tag">10 infants (licensed max 10)</span></div>
-        </div>
+      <article class="ods-card">
+        <div class="card-top"><h2>2. Sunbeam Home Daycare</h2><span class="dist">700 m</span></div>
+        <p class="type">Licensed home daycare · ages 12 mo – 5 yr</p>
+        <div class="ontario-callout ontario-callout--success"><p><strong>Matches what matters to you:</strong> CWELCC fees ($22/day)<span class="callout-note">Doesn't offer: Infant (under 18 mo)</span></p></div>
+        <p class="avail"><span class="status-dot open"></span>1 toddler spot open now</p>
+        <p class="price">$22/day (CWELCC) · 4 families in range for this age group</p>
+        <ul class="tags"><li class="tag tag--cwelcc">CWELCC ✓</li><li class="tag">Backyard + daily park walk</li><li class="tag">5 children (licensed max 6)</li></ul>
+      </article>
 
-        <div class="result">
-          <div class="result-top"><h3>2. Sunbeam Home Daycare</h3><span class="dist">700 m</span></div>
-          <div class="meta">Licensed home daycare · ages 12 mo – 5 yr</div>
-          <div class="matchbox"><b>Matches what matters to you:</b> CWELCC fees ($22/day)<br><span class="nomatch">Doesn't offer: Infant (under 18 mo)</span></div>
-          <div class="avail"><span class="dot"></span>1 toddler spot open now</div>
-          <div class="price">$22/day (CWELCC) · 4 families in range for this age group</div>
-          <div class="tags"><span class="tag cwelcc">CWELCC ✓</span><span class="tag">Backyard + daily park walk</span><span class="tag">5 children (licensed max 6)</span></div>
-        </div>
-
-        <div class="result">
-          <div class="result-top"><h3>3. Petits Pas Bilingue</h3><span class="dist">1.1 km</span></div>
-          <div class="meta">Licensed centre · ages 18 mo – 5 yr</div>
-          <div class="matchbox"><b>Matches what matters to you:</b> CWELCC fees ($22/day)<br><span class="nomatch">Doesn't offer: Infant (under 18 mo)</span></div>
-          <div class="avail"><span class="dot g"></span>Next opening likely Jan 2027</div>
-          <div class="price">$22/day (CWELCC) · 31 families in range for this age group</div>
-          <div class="tags"><span class="tag cwelcc">CWELCC ✓</span><span class="tag">90 min daily outdoor</span><span class="tag">13 toddlers (licensed max 15)</span></div>
-        </div>
-      </div>
+      <article class="ods-card">
+        <div class="card-top"><h2>3. Petits Pas Bilingue</h2><span class="dist">1.1 km</span></div>
+        <p class="type">Licensed centre · ages 18 mo – 5 yr</p>
+        <div class="ontario-callout ontario-callout--success"><p><strong>Matches what matters to you:</strong> CWELCC fees ($22/day)<span class="callout-note">Doesn't offer: Infant (under 18 mo)</span></p></div>
+        <p class="avail"><span class="status-dot wait"></span>Next opening likely Jan 2027</p>
+        <p class="price">$22/day (CWELCC) · 31 families in range for this age group</p>
+        <ul class="tags"><li class="tag tag--cwelcc">CWELCC ✓</li><li class="tag">90 min daily outdoor</li><li class="tag">13 toddlers (licensed max 15)</li></ul>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- ============ MY APPLICATIONS ============ -->
-<section class="screen" id="apps">
-  <div class="wrap">
-    <h1>Your applications</h1>
-    <p class="sub">Honest numbers, real movement. We show group-level standing instead of a fake queue position, because the rules differ at every centre.</p>
+<!-- MY APPLICATIONS -->
+<section class="screen" id="apps" aria-labelledby="apps-h">
+  <h1 id="apps-h" class="ontario-h1">Your applications</h1>
+  <p class="ontario-lead">Honest numbers, real movement. We show group-level standing instead of a fake queue position, because the rules differ at every centre.</p>
 
-    <div class="appcard">
-      <h3>Maple Grove Children's Centre</h3>
-      <div class="applied">Applied Mar 4, 2026</div>
-      <div class="stand"><b>Where you stand:</b> You're in the first third of families for the infant room.<span class="small">3 infant spots opening Sept 2026 · 18 families in range</span></div>
-      <div class="barlabel">Estimated standing (range, not a promise)</div>
+  <div class="stack" style="margin-top:24px">
+    <article class="ods-card">
+      <h2>Maple Grove Children's Centre</h2>
+      <p class="type">Applied Mar 4, 2026</p>
+      <div class="ontario-callout ontario-callout--success"><p><strong>Where you stand:</strong> You're in the first third of families for the infant room.<span class="callout-note">3 infant spots opening Sept 2026 · 18 families in range</span></p></div>
+      <p class="barlabel">Estimated standing (range, not a promise)</p>
       <div class="bartrack"><div class="barfill" style="width:30%"></div></div>
       <div class="barends"><span>Next offers</span><span>Later intake</span></div>
-      <div class="warn">⚠ Missing document: Infant feeding plan. Upload it once — it applies everywhere.</div>
-      <div class="acthead">Recent activity at this centre</div>
-      <div class="act"><span class="date">Jun 8</span><span>Spot offered to a family on this list</span></div>
-      <div class="act"><span class="date">May 26</span><span>List reviewed by centre director</span></div>
-      <div class="act"><span class="date">May 12</span><span>New family added for this age group</span></div>
-      <div class="confirmrow"><span>Maple Grove asks: still interested in a Sept 2026 infant spot?</span><button class="btn btn-amber">Yes, keep my spot</button></div>
-    </div>
+      <div class="ontario-callout ontario-callout--alert" style="margin-top:16px"><p><strong>Missing document:</strong> Infant feeding plan. Upload it once — it applies everywhere.</p></div>
+      <p class="acthead">Recent activity at this centre</p>
+      <ul class="activity">
+        <li><span class="date">Jun 8</span><span>Spot offered to a family on this list</span></li>
+        <li><span class="date">May 26</span><span>List reviewed by centre director</span></li>
+        <li><span class="date">May 12</span><span>New family added for this age group</span></li>
+      </ul>
+      <div class="ontario-callout ontario-callout--warning" style="margin-top:16px">
+        <div class="confirmrow"><p>Maple Grove asks: still interested in a Sept 2026 infant spot?</p><button class="ontario-button ontario-button--primary">Yes, keep my spot</button></div>
+      </div>
+    </article>
 
-    <div class="appcard">
-      <h3>Petits Pas Bilingue</h3>
-      <div class="applied">Applied Mar 4, 2026</div>
-      <div class="stand"><b>Where you stand:</b> 31 families in range for toddler spots. Movement is slow until January. Next opening likely Jan 2027</div>
-      <div class="barlabel">Estimated standing (range, not a promise)</div>
+    <article class="ods-card">
+      <h2>Petits Pas Bilingue</h2>
+      <p class="type">Applied Mar 4, 2026</p>
+      <div class="ontario-callout ontario-callout--success"><p><strong>Where you stand:</strong> 31 families in range for toddler spots. Movement is slow until January. Next opening likely Jan 2027</p></div>
+      <p class="barlabel">Estimated standing (range, not a promise)</p>
       <div class="bartrack"><div class="barfill" style="width:72%"></div></div>
       <div class="barends"><span>Next offers</span><span>Later intake</span></div>
-      <div class="docsok">✓ All 3 required documents on file</div>
-      <div class="acthead">Recent activity at this centre</div>
-      <div class="act ok"><span class="date">Jun 2</span><span>List updated</span></div>
-      <div class="act ok"><span class="date">Apr 19</span><span>Two families confirmed they're still interested</span></div>
-    </div>
+      <p class="docsok">✓ All 3 required documents on file</p>
+      <p class="acthead">Recent activity at this centre</p>
+      <ul class="activity">
+        <li><span class="date">Jun 2</span><span>List updated</span></li>
+        <li><span class="date">Apr 19</span><span>Two families confirmed they're still interested</span></li>
+      </ul>
+    </article>
   </div>
 </section>
 
-<!-- ============ MY PROFILE ============ -->
-<section class="screen" id="profile">
-  <div class="wrap">
-    <h1>One profile, every application</h1>
-    <p class="sub">Enter your information once. When anything changes — your address, a renewed document — every live application updates automatically.</p>
+<!-- MY PROFILE -->
+<section class="screen" id="profile" aria-labelledby="profile-h">
+  <h1 id="profile-h" class="ontario-h1">One profile, every application</h1>
+  <p class="ontario-lead">Enter your information once. When anything changes — your address, a renewed document — every live application updates automatically.</p>
 
-    <div class="pcard">
-      <div class="psectionhead">Family</div>
-      <div class="prow"><span class="k">Child</span><span class="v">Nika · 5 months</span></div>
-      <div class="prow"><span class="k">Home address</span><span class="v">114 Birchmount Ave, Toronto</span></div>
-      <div class="prow"><span class="k">Languages at home</span><span class="v">Farsi, English</span></div>
-      <div class="prow"><span class="k">Care needed from</span><span class="v">September 2026</span></div>
-    </div>
+  <h2 class="sect">Family</h2>
+  <dl class="ontario-summary">
+    <div class="row"><dt>Child</dt><dd>Nika · 5 months</dd></div>
+    <div class="row"><dt>Home address</dt><dd>114 Birchmount Ave, Toronto</dd></div>
+    <div class="row"><dt>Languages at home</dt><dd>Farsi, English</dd></div>
+    <div class="row"><dt>Care needed from</dt><dd>September 2026</dd></div>
+  </dl>
 
-    <div class="pcard">
-      <div class="psectionhead">Documents on file</div>
-      <div class="prow"><span class="k">Immunization record</span><span class="badge amber">Renew by Aug 2026</span></div>
-      <div class="prow"><span class="k">Proof of Ontario address</span><span class="badge green">Up to date</span></div>
-      <div class="prow"><span class="k">Infant feeding plan</span><span class="badge amber">Not uploaded</span></div>
-      <div class="footnote">We warn you before a document expires — so an out-of-date file never quietly stalls an application.</div>
-    </div>
-  </div>
+  <h2 class="sect">Documents on file</h2>
+  <dl class="ontario-summary">
+    <div class="row"><dt>Immunization record</dt><dd><span class="ontario-badge ontario-badge--error">Renew by Aug 2026</span></dd></div>
+    <div class="row"><dt>Proof of Ontario address</dt><dd><span class="ontario-badge ontario-badge--success">Up to date</span></dd></div>
+    <div class="row"><dt>Infant feeding plan</dt><dd><span class="ontario-badge ontario-badge--error">Not uploaded</span></dd></div>
+  </dl>
+  <p class="footnote">We warn you before a document expires — so an out-of-date file never quietly stalls an application.</p>
 </section>
+
+</div>
+</main>
 
 <script>
-  const buttons=document.querySelectorAll('.nav button');
+  const buttons=document.querySelectorAll('nav.app-tabs button');
   const screens=document.querySelectorAll('.screen');
   buttons.forEach(b=>b.addEventListener('click',()=>{
     const go=b.dataset.go;
-    buttons.forEach(x=>x.classList.toggle('on',x===b));
+    buttons.forEach(x=>x.removeAttribute('aria-current'));
+    b.setAttribute('aria-current','page');
     screens.forEach(s=>s.classList.toggle('on',s.id===go));
-    window.scrollTo({top:0,behavior:'smooth'});
+    document.getElementById('main').focus();
+    window.scrollTo({top:0});
   }));
-  document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
 </script>
 </body>
 </html>
